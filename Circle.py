@@ -1,14 +1,14 @@
 import random
 class Circle(object):
     def __init__(self):
-        self.centerPt = [0,0,0]
-        self.radius = 1000
+        self.pt = [0,0,0]
+        self.r = 1000
 
-    def setCenterPt(self):
-        x = random.uniform(0,10000)
-        y = random.uniform(0,10000)
-        z = random.uniform(0,10000)
-        self.centerPt = [x,y,z]
+    def setCenterPt(self,min,max):
+        x = random.uniform(min,max)
+        y = random.uniform(min,max)
+        z = random.uniform(min,max)
+        self.pt = [x,y,z]
     
-    def setRadius(self):
-        self.radius = random.uniform(300,1200)
+    def setRadius(self,min,max):
+        self.r = random.uniform(min,max)
