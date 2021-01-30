@@ -39,4 +39,4 @@ def saveImage(frameCnt):
 
 if(__name__ == "__main__"):
     circles = []
-    conduit = Animation(setup,update,draw,bake,saveImage)
+    animation = Animation(setup,update,draw,bake,saveImage)
