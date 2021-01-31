@@ -2,35 +2,45 @@
 import Rhino
 import rhinoscriptsyntax as rs
 import scriptcontext
+import random
 from Animation import Animation
-from Circle import Circle
-
+from Box import Box
 
 def setup():
-    for i in range(1):
-        circle = Circle()
-        circles.append(circle)
+    for i in range(100):
+        box = Box()
+        boxes.append(box)
 
 def update():
-    for circle in circles:
-        circle.setCenterPt(-3000,3000)
-        circle.setRadius(300,1200)
+    for box in boxes:
+        x = random.uniform(-1000,1000)
+        y = random.uniform(-1000,1000)
+        z = random.uniform(-1000,1000)
+        box.pt = [x,y,z]
+        box.w = random.uniform(10,300)
+        box.d = random.uniform(10,300)
+        box.h = random.uniform(10,300)
+        r = random.randint(0,255)
+        g = random.randint(0,255)
+        b = random.randint(0,255)
+        box.color = [r,g,b]
+        box.setCorners()
 
-def draw(dp,frameCnt):
-    print("frameCnt = {}".format(frameCnt))
-    for circle in circles:
-        # dynamic circle
-        pt = Rhino.Geometry.Point3d(circle.pt[0],circle.pt[1],circle.pt[2])
-        c = Rhino.Geometry.Circle(pt, circle.r)
-        dp.DrawCircle(c, rs.CreateColor(255,0,0))
-        # dynamic 2d text
-        msg = "{}".format(circle.pt)
-        dp.Draw2dText(msg, rs.CreateColor(0,0,255), pt, True, 5, "Arial")
+def draw(dp,frameCnt,bboxes):
+    # print("frameCnt = {}".format(frameCnt))
+    for box in boxes:
+        corners = rs.coerce3dpointlist(box.corners, True)
+        brep = Rhino.Geometry.Brep.CreateFromBox(corners)
+        bbox = brep.GetBoundingBox(True)
+        bboxes.append(bbox)
+        mat = Rhino.Display.DisplayMaterial()
+        mat.Diffuse = rs.CreateColor(box.color)
+        mat.Transparency = 0.2
+        dp.DrawBrepShaded(brep, mat)  
+        # dp.DrawBrepWires(brep,rs.CreateColor(box.color))
 
 def bake():
-    pass
-    # for circle in circles:
-    #     rs.AddCircle(circle.pt, circle.r)
+    print("bake")
 
 def saveImage(frameCnt):
     pass
@@ -38,5 +48,5 @@ def saveImage(frameCnt):
     # bitmap.Save("image/image{}.png".format(frameCnt))
 
 if(__name__ == "__main__"):
-    circles = []
+    boxes = []
     animation = Animation(setup,update,draw,bake,saveImage)

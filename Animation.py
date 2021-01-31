@@ -17,17 +17,18 @@ class Animation(Rhino.Display.DisplayConduit):
             
         self.frameCnt = 0
         self.loopFlg = False
+        self.bboxes = []
 
         self.setup()
         self.loop()
 
     def setup(self):
         pass
-
-    def update(self):
-        pass
     
     def draw(self,dp):
+        pass
+
+    def update(self):
         pass
 
     def bake(self):
@@ -51,4 +52,8 @@ class Animation(Rhino.Display.DisplayConduit):
 
     def DrawOverlay(self, e):
         dp = e.Display
-        self.draw(dp,self.frameCnt)
+        self.draw(dp,self.frameCnt,self.bboxes)
+
+    def CalculateBoundingBox(self, e):
+        for bbox in self.bboxes:
+            e.IncludeBoundingBox(bbox)
